@@ -1,12 +1,14 @@
 export default function Sidebar() {
-    const icons = ["◧", "＋", "📁", "⚙"];
+    const icons = ["fa-grid-2", "fa-plus", "fa-folder-open", "fa-gear"];
     return (
         <aside style={styles.sidebar}>
-            <div style={styles.logo}>₭</div>
+            <div style={styles.logo}>
+                <i className="fa-solid fa-wallet"></i>
+            </div>
             <nav style={styles.nav}>
                 {icons.map((icon, i) => (
                     <button key={i} style={{ ...styles.navBtn, ...(i === 0 ? styles.navActive : {}) }}>
-                        {icon}
+                        <i className={`fa-solid ${icon}`}></i>
                     </button>
                 ))}
             </nav>
@@ -24,8 +26,6 @@ const styles = {
     },
     logo: {
         color: "var(--green)",
-        fontFamily: "var(--font-display)",
-        fontWeight: 800,
         fontSize: 22,
         marginBottom: 48,
     },
@@ -37,7 +37,7 @@ const styles = {
         border: "none",
         background: "transparent",
         color: "rgba(255,255,255,0.5)",
-        fontSize: 18,
+        fontSize: 16,
         cursor: "pointer",
     },
     navActive: {
