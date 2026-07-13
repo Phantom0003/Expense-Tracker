@@ -1,4 +1,5 @@
 import { useTransactions } from "../context/TransactionContext";
+import PeekingMascot from "./PeekingMascot"; 
 
 export default function RecentActivity() {
     const { transactions } = useTransactions();
@@ -38,7 +39,7 @@ export default function RecentActivity() {
                                 <p style={styles.rowTitle}>{t.description || t.category}</p>
                                 <p style={styles.rowSub}>
                                     <span style={{ color: t.type === "income" ? "#10b981" : "#ef4444", fontWeight: "600" }}>
-                                        {t.type === "income" ? "+" : "-"}${t.amount}
+                                        {t.type === "income" ? "+" : "-"}Rs{t.amount}
                                     </span>
                                     {` · ${t.date}`}
                                 </p>
