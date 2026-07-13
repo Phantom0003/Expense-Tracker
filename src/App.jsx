@@ -4,12 +4,8 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import Dashboard from "./components/Dashboard";
 import TransactionForm from "./components/TransactionForm";
-import FilterBar from "./components/FilterBar";
-import TransactionList from "./components/TransactionList";
-import SpendingChart from "./components/SpendingChart";
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [showForm, setShowForm] = useState(false);
 
   return (
@@ -18,21 +14,15 @@ function App() {
         <Sidebar />
         <div>
           <Topbar />
+          {/* Dashboard internally manages your charts and ledger cards */}
           <Dashboard onAddClick={() => setShowForm(true)} />
 
-          <div style={{ padding: "0 32px 32px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-            <div>
-              <FilterBar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
-              <TransactionList selectedCategory={selectedCategory} />
-            </div>
-            <SpendingChart />
-          </div>
-
+          {/* Form Overlay Modal */}
           {showForm && (
             <div style={overlayStyles.backdrop} onClick={() => setShowForm(false)}>
               <div style={overlayStyles.modal} onClick={(e) => e.stopPropagation()}>
                 <button style={overlayStyles.close} onClick={() => setShowForm(false)}>✕</button>
-                <TransactionForm />
+                <TransactionForm onClose={() => setShowForm(false)} />
               </div>
             </div>
           )}
@@ -47,6 +37,7 @@ const overlayStyles = {
     position: "fixed", inset: 0,
     background: "rgba(20,33,61,0.4)",
     display: "flex", alignItems: "center", justifyContent: "center",
+    zIndex: 999,
   },
   modal: {
     background: "var(--card)", borderRadius: 16,
