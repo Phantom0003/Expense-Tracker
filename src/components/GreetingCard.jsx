@@ -1,26 +1,32 @@
 export default function GreetingCard({ onAddClick }) {
-    const hour = new Date().getHours();
-    const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-
     return (
         <div style={styles.card}>
-            <p style={styles.eyebrow}>{greeting.toUpperCase()}</p>
-            <h1 style={styles.heading}>Let's check your money.</h1>
-            <p style={styles.sub}>Here's a quick look at where things stand today.</p>
+            <div style={styles.textContainer}>
+                <h1 style={styles.heading}>Hi, George!</h1>
+                <p style={styles.sub}>What are we doing today?</p>
 
-            <div style={styles.linkGrid}>
-                <button style={styles.link} onClick={onAddClick}>
-                    <i className="fa-solid fa-circle-plus" style={styles.linkIcon}></i> Add Expense
-                </button>
-                <button style={styles.link} onClick={onAddClick}>
-                    <i className="fa-solid fa-sack-dollar" style={styles.linkIcon}></i> Add Income
-                </button>
-                <button style={styles.link}>
-                    <i className="fa-solid fa-chart-column" style={styles.linkIcon}></i> View Report
-                </button>
-                <button style={styles.link}>
-                    <i className="fa-solid fa-tags" style={styles.linkIcon}></i> Categories
-                </button>
+                <div style={styles.linkGrid}>
+                    <div style={styles.checkItem} onClick={onAddClick}>
+                        <span style={{ ...styles.bullet, backgroundColor: "#3b82f6" }}></span>
+                        Check Calendar
+                    </div>
+                    <div style={styles.checkItem} onClick={onAddClick}>
+                        <span style={{ ...styles.bullet, backgroundColor: "#f59e0b" }}></span>
+                        Manage Wallet
+                    </div>
+                    <div style={styles.checkItem} onClick={onAddClick}>
+                        <span style={{ ...styles.bullet, backgroundColor: "#ef4444" }}></span>
+                        Manage Workers
+                    </div>
+                    <div style={styles.checkItem} onClick={onAddClick}>
+                        <span style={{ ...styles.bullet, backgroundColor: "#10b981" }}></span>
+                        Manage Projects
+                    </div>
+                </div>
+            </div>
+
+            <div style={styles.graphicWrap}>
+                <div style={styles.avatarCircle}>P</div>
             </div>
         </div>
     );
@@ -28,42 +34,20 @@ export default function GreetingCard({ onAddClick }) {
 
 const styles = {
     card: {
-        background: "var(--card)",
-        border: "1px solid var(--line)",
-        borderRadius: 20,
-        padding: "32px",
+        background: "#ffffff", borderRadius: "32px", padding: "40px",
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.01)", position: "relative", overflow: "hidden",
     },
-    eyebrow: {
-        fontFamily: "var(--font-mono)",
-        fontSize: 12,
-        letterSpacing: 2,
-        color: "var(--green)",
-        margin: 0,
-    },
-    heading: {
-        fontFamily: "var(--font-display)",
-        fontSize: 30,
-        fontWeight: 700,
-        margin: "8px 0 4px",
-    },
-    sub: { color: "var(--muted)", margin: "0 0 24px", fontSize: 14 },
-    linkGrid: {
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: 12,
-    },
-    link: {
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        border: "1px solid var(--line)",
-        background: "var(--paper)",
-        borderRadius: 10,
-        padding: "10px 14px",
-        fontFamily: "var(--font-body)",
-        fontSize: 14,
-        cursor: "pointer",
-        textAlign: "left",
-    },
-    linkIcon: { fontSize: 14, color: "var(--green)", width: 16 },
+    textContainer: { flex: 1 },
+    heading: { fontSize: "36px", fontWeight: "700", margin: "0 0 8px 0", color: "#1e293b" },
+    sub: { color: "#94a3b8", margin: "0 0 32px 0", fontSize: "15px" },
+    linkGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 24px" },
+    checkItem: { display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", fontWeight: "500", color: "#334155", cursor: "pointer" },
+    bullet: { width: "8px", height: "8px", borderRadius: "50%" },
+    graphicWrap: { display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "20px" },
+    avatarCircle: {
+        width: "130px", height: "130px", background: "#f8fafc", borderRadius: "50%",
+        display: "flex", alignItems: "center", justifyContent: "center", fontSize: "42px",
+        border: "1px dashed #cbd5e1", fontWeight: "700", color: "#6366f1"
+    }
 };

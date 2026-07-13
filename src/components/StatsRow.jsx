@@ -12,24 +12,27 @@ export default function StatsRow() {
         transactions.filter(t => t.type === "expense").forEach(t => {
             totals[t.category] = (totals[t.category] || 0) + t.amount;
         });
-        const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-        return sorted[0]?.[0] || "—";
+        return Object.entries(totals).sort((a, b) => b[1] - a[1])[0]?.[0] || "None";
     })();
 
     const stats = [
-        { icon: "fa-wallet", label: "Current Balance", value: `$${balance.toFixed(2)}` },
-        { icon: "fa-arrow-trend-up", label: "Total Income", value: `$${income.toFixed(2)}` },
-        { icon: "fa-arrow-trend-down", label: "Total Expenses", value: `$${expenses.toFixed(2)}` },
-        { icon: "fa-tag", label: "Top Category", value: topCategory },
+        { icon: "fa-wallet", label: "Potential Monthly Profit", value: `$${balance.toLocaleString()}`, bg: "#fee2e2", color: "#ef4444" },
+        { icon: "fa-users", label: "Workers Wage This Month", value: `$${expenses.toLocaleString()}`, bg: "#dbeafe", color: "#3b82f6" },
+        { icon: "fa-calendar-days", label: "Average Project Length", value: "2 weeks", bg: "#fef3c7", color: "#f59e0b" },
+        { icon: "fa-arrow-trend-up", label: "Average Income Category", value: topCategory, bg: "#d1fae5", color: "#10b981" },
     ];
 
     return (
         <div style={styles.grid}>
             {stats.map((s) => (
                 <div key={s.label} style={styles.tile}>
-                    <i className={`fa-solid ${s.icon}`} style={styles.icon}></i>
-                    <p style={styles.label}>{s.label}</p>
-                    <p style={styles.value}>{s.value}</p>
+                    <div style={{ ...styles.iconContainer, backgroundColor: s.bg, color: s.color }}>
+                        <i className={`fa-solid ${s.icon}`}></i>
+                    </div>
+                    <div>
+                        <p style={styles.label}>{s.label}</p>
+                        <h2 style={styles.value}>{s.value}</h2>
+                    </div>
                 </div>
             ))}
         </div>
@@ -37,19 +40,9 @@ export default function StatsRow() {
 }
 
 const styles = {
-    grid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-        gap: 16,
-        marginTop: 20,
-    },
-    tile: {
-        background: "var(--card)",
-        border: "1px solid var(--line)",
-        borderRadius: 16,
-        padding: "18px 20px",
-    },
-    icon: { fontSize: 18, color: "var(--green)" },
-    label: { fontSize: 13, color: "var(--muted)", margin: "10px 0 2px" },
-    value: { fontFamily: "var(--font-mono)", fontSize: 20, fontWeight: 700, margin: 0 },
+    grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "24px" },
+    tile: { background: "#ffffff", borderRadius: "28px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "150px", border: "1px solid #f8fafc" },
+    iconContainer: { width: "40px", height: "40px", borderRadius: "14px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" },
+    label: { fontSize: "12px", fontWeight: "500", color: "#94a3b8", margin: "0 0 4px 0" },
+    value: { fontSize: "22px", fontWeight: "700", color: "#1e293b", margin: 0, trackingTight: "-0.02em" },
 };

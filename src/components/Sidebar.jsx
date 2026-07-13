@@ -1,9 +1,9 @@
 export default function Sidebar() {
-    const icons = ["fa-grid-2", "fa-plus", "fa-folder-open", "fa-gear"];
+    const icons = ["fa-grid-2", "fa-wallet", "fa-folder-open", "fa-gear"];
     return (
         <aside style={styles.sidebar}>
             <div style={styles.logo}>
-                <i className="fa-solid fa-wallet"></i>
+                <div style={styles.logoIcon}>A</div>
             </div>
             <nav style={styles.nav}>
                 {icons.map((icon, i) => (
@@ -12,36 +12,56 @@ export default function Sidebar() {
                     </button>
                 ))}
             </nav>
+            <div style={{ marginTop: "auto" }}>
+                <button style={styles.navBtn}>
+                    <i className="fa-solid fa-gear"></i>
+                </button>
+            </div>
         </aside>
     );
 }
 
 const styles = {
     sidebar: {
-        background: "var(--navy)",
+        background: "#ffffff",
+        width: "85px",
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "24px 0",
+        padding: "32px 0",
+        borderRight: "1px solid #eef2f6",
+        position: "sticky",
+        top: 0,
     },
-    logo: {
-        color: "var(--green)",
-        fontSize: 22,
-        marginBottom: 48,
+    logo: { marginBottom: "48px" },
+    logoIcon: {
+        width: "42px",
+        height: "42px",
+        background: "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
+        borderRadius: "14px",
+        color: "#ffffff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: "bold",
+        fontSize: "18px",
+        boxShadow: "0 4px 12px rgba(79, 70, 229, 0.15)",
     },
-    nav: { display: "flex", flexDirection: "column", gap: 16 },
+    nav: { display: "flex", flexDirection: "column", gap: "20px" },
     navBtn: {
-        width: 44,
-        height: 44,
-        borderRadius: 12,
+        width: "48px",
+        height: "48px",
+        borderRadius: "16px",
         border: "none",
         background: "transparent",
-        color: "rgba(255,255,255,0.5)",
-        fontSize: 16,
+        color: "#a3b1cc",
+        fontSize: "18px",
         cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "all 0.2s ease",
     },
-    navActive: {
-        background: "var(--navy-light)",
-        color: "var(--green)",
-    },
+    navActive: { background: "#f0f4ff", color: "#4f46e5" },
 };
