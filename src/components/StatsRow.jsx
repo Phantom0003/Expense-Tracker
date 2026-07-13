@@ -1,109 +1,190 @@
 import { useTransactions } from "../context/TransactionContext";
 import PeekingMascot from "./PeekingMascot";
 
-// Change this variable to your preferred currency type (e.g., "Rs.", "LKR", "$", "€")
-const CURRENCY = "Rs. ";
-
-export default function StatsGrid() {
+export default function StatsRow() {
     const { transactions } = useTransactions();
 
-    const totalIncome = transactions
+    // Financial calculations
+    const income = transactions
         .filter((t) => t.type === "income")
         .reduce((sum, t) => sum + t.amount, 0);
 
-    const totalExpenses = transactions
+    const expenses = transactions
         .filter((t) => t.type === "expense")
         .reduce((sum, t) => sum + t.amount, 0);
 
-    const totalBalance = totalIncome - totalExpenses;
+    const balance = income - expenses;
 
-    const expenseTotals = transactions
+    const categoryTotals = transactions
         .filter((t) => t.type === "expense")
         .reduce((acc, t) => {
-            acc[t.category] = (acc[t.category] || 0) + t.amount;
+            if (t.category) {
+                acc[t.category] = (acc[t.category] || 0) + t.amount;
+            }
             return acc;
         }, {});
 
-    let topCategory = "None";
-    let maxExpense = 0;
-    Object.entries(expenseTotals).forEach(([category, amount]) => {
-        if (amount > maxExpense) {
-            maxExpense = amount;
-            topCategory = category;
-        }
-    });
+    const topCategory = Object.keys(categoryTotals).reduce(
+        (a, b) => (categoryTotals[a] > categoryTotals[b] ? a : b),
+        "None"
+    );
 
     return (
-        <div style={styles.gridContainer}>
-            {/* Card 1: Total Balance */}
-            <div style={styles.card}>
+        <div style={styles.grid}>
+            {/* Custom Interactive CSS Keyframes for Stats Cards */}
+            <style>{`
+                /* INCOME CARD: Joyful Tail Wag & Jump */
+                @keyframes happyTail {
+                    0%, 100% { transform: rotate(0deg); }
+                    50% { transform: rotate(-20deg); }
+                }
+                @keyframes happyJump {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-6px) scaleY(1.05); }
+                }
+                .income-tile:hover .shark-tail { 
+                    animation: happyTail 0.25s ease-in-out infinite; 
+                    transform-origin: 28px 38px;
+                }
+                .income-tile:hover .income-mascot { 
+                    animation: happyJump 0.5s ease-in-out infinite; 
+                }
+
+                /* EXPENSE CARD: Pure Tantrum Shiver & Red Alert Fuming */
+                @keyframes intenseFume {
+                    0%, 100% { transform: translate(0, 0) scale(1); }
+                    20% { transform: translate(-1.5px, 1px) scale(1.02); }
+                    40% { transform: translate(1.5px, -1px) scale(1.02); }
+                    60% { transform: translate(-1px, -1.5px) scale(0.99); }
+                    80% { transform: translate(1px, 1.5px) scale(1.01); }
+                }
+                @keyframes angerPulse {
+                    0%, 100% { fill: #8293a4; }
+                    50% { fill: #ef4444; } /* Suit turns warning red */
+                }
+                .expense-tile:hover .expense-mascot { 
+                    animation: intenseFume 0.1s linear infinite; 
+                }
+                .expense-tile:hover .anger-suit {
+                    animation: angerPulse 0.4s ease-in-out infinite;
+                }
+                .expense-tile:hover .anger-vein { opacity: 1 !important; transform: scale(1) translateY(-2px); }
+
+                /* TOP CATEGORY CARD: Sleek Horizontal Border Peek */
+                @keyframes sidePeekIn {
+                    0% { transform: translateX(100%); }
+                    100% { transform: translateX(0); }
+                }
+                .category-tile:hover .side-mascot { 
+                    animation: sidePeekIn 0.25s ease-out forwards; 
+                }
+            `}</style>
+
+            {/* CARD 1: Current Balance */}
+            <div style={styles.tile}>
                 <div style={{ ...styles.iconWrapper, backgroundColor: "#eff6ff" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
-                        <path d="M23 12h-4a2 2 0 0 0 0 4h4" />
-                    </svg>
+                    <i className="fa-solid fa-wallet" style={{ ...styles.icon, color: "#3b82f6" }} />
                 </div>
-                <span style={styles.label}>Total Balance</span>
-                <h2 style={styles.value}>{CURRENCY}{totalBalance.toLocaleString()}</h2>
+                <p style={styles.label}>Current Balance</p>
+                <h2 style={styles.value}>Rs. {balance.toLocaleString()}</h2>
+                <PeekingMascot />
             </div>
 
-            {/* Card 2: Total Income */}
-            <div style={styles.card}>
-                <div style={{ ...styles.iconWrapper, backgroundColor: "#dcfce7" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                        <polyline points="17 6 23 6 23 12" />
+            {/* CARD 2: Total Income (Happy Mascot Variant) */}
+            <div className="income-tile" style={styles.tile}>
+                <div style={{ ...styles.iconWrapper, backgroundColor: "#ecfdf5" }}>
+                    <i className="fa-solid fa-arrow-trend-up" style={{ ...styles.icon, color: "#10b981" }} />
+                </div>
+                <p style={styles.label}>Total Income</p>
+                <h2 style={styles.value}>Rs. {income.toLocaleString()}</h2>
+
+                <div className="income-mascot" style={styles.cornerMascotContainer}>
+                    <svg width="52" height="48" viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path className="shark-tail" d="M12 36C4 34 2 40 4 42C8 44 16 40 16 38Z" fill="#78899a" />
+                        <path d="M30 12C30 12 26 2 31 0C33 2 34 12 34 12Z" fill="#78899a" stroke="#5a6a7b" strokeWidth="1.5" />
+                        <path d="M14 50C12 30 18 14 34 14C50 14 56 30 54 50Z" fill="#8293a4" stroke="#5a6a7b" strokeWidth="2" />
+                        <path d="M21 50C21 38 26 30 34 30C42 30 47 38 47 50Z" fill="#ffffff" />
+                        <path d="M21 34L25 39L29 34L33 39L37 34L41 39L45 34" fill="#ffffff" stroke="#5a6a7b" strokeWidth="1.5" />
+                        {/* Always Happy Inverted Sparkle Eyes */}
+                        <path d="M24 44Q27 40 30 44" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                        <path d="M44 44Q41 40 38 44" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                        <path d="M32 46C32 46 33 49 34 49C35 49 36 46 36 46H32Z" fill="#1e293b" />
+                        <circle cx="22" cy="46" r="2.5" fill="#f43f5e" opacity="0.8" />
+                        <circle cx="46" cy="46" r="2.5" fill="#f43f5e" opacity="0.8" />
                     </svg>
                 </div>
-                <span style={styles.label}>Total Income</span>
-                <h2 style={{ ...styles.value, color: "#10b981" }}>
-                    +{CURRENCY}{totalIncome.toLocaleString()}
-                </h2>
             </div>
 
-            {/* Card 3: Total Expenses */}
-            <div style={styles.card}>
-                <div style={{ ...styles.iconWrapper, backgroundColor: "#fee2e2" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                        <polyline points="17 18 23 18 23 12" />
+            {/* CARD 3: Total Expenses (Anger Mascot Variant) */}
+            <div className="expense-tile" style={styles.tile}>
+                <div style={{ ...styles.iconWrapper, backgroundColor: "#fef2f2" }}>
+                    <i className="fa-solid fa-arrow-trend-down" style={{ ...styles.icon, color: "#ef4444" }} />
+                </div>
+                <p style={styles.label}>Total Expenses</p>
+                <h2 style={styles.value}>Rs. {expenses.toLocaleString()}</h2>
+
+                <div className="expense-mascot" style={styles.cornerMascotContainer}>
+                    <svg width="52" height="48" viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M30 12C30 12 26 2 31 0C33 2 34 12 34 12Z" fill="#5a6a7b" />
+                        {/* The body suit changes to flashing crimson red color states during hover animation */}
+                        <path className="anger-suit" d="M14 50C12 30 18 14 34 14C50 14 56 30 54 50Z" fill="#8293a4" stroke="#475569" strokeWidth="2" />
+                        <path d="M21 50C21 38 26 30 34 30C42 30 47 38 47 50Z" fill="#ffffff" />
+                        <path d="M21 34L25 39L29 34L33 39L37 34L41 39L45 34" fill="#ffffff" stroke="#475569" strokeWidth="1.5" />
+
+                        {/* Deep Angled Mad Eyebrows & Glaring Frown Eyes */}
+                        <path d="M22 40L29 43" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" />
+                        <path d="M46 40L39 43" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" />
+                        <path d="M24 45C25 43 28 43 28 45" stroke="#1e293b" strokeWidth="2" strokeLinecap="round" />
+                        <path d="M44 45C43 43 40 43 40 45" stroke="#1e293b" strokeWidth="2" strokeLinecap="round" />
+                        <path d="M31 48Q34 45 37 48" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+
+                        {/* Hidden Cross/Pop Vein Highlight Accent */}
+                        <path className="anger-vein" d="M46 22H52M49 19V25" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" style={{ opacity: 0, transition: "all 0.2s", transformOrigin: "49px 22px" }} />
                     </svg>
                 </div>
-                <span style={styles.label}>Total Expenses</span>
-                <h2 style={{ ...styles.value, color: "#ef4444" }}>
-                    -{CURRENCY}{totalExpenses.toLocaleString()}
-                </h2>
             </div>
 
-            {/* Card 4: Top Expense Category */}
-            <div style={styles.card}>
-                <div style={{ ...styles.iconWrapper, backgroundColor: "#fef3c7" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-                        <line x1="7" y1="7" x2="7.01" y2="7" />
+            {/* CARD 4: Top Category */}
+            <div className="category-tile" style={styles.tile}>
+                <div style={{ ...styles.iconWrapper, backgroundColor: "#fffbeb" }}>
+                    <i className="fa-solid fa-tag" style={{ ...styles.icon, color: "#f59e0b" }} />
+                </div>
+                <p style={styles.label}>Top Category</p>
+                <h2 style={styles.value}>{topCategory !== "None" ? topCategory : "N/A"}</h2>
+
+                <div className="side-mascot" style={styles.sideMascotContainer}>
+                    <svg width="45" height="50" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 34C16 32 30 26 30 10C30 -6 16 -12 0 -10Z" fill="#8293a4" stroke="#5a6a7b" strokeWidth="2" />
+                        <path d="M0 27C10 27 16 22 16 14C16 6 10 1 0 1Z" fill="#ffffff" />
+                        <circle cx="10" cy="10" r="2" fill="#1e293b" />
+                        <circle cx="10" cy="19" r="2" fill="#1e293b" />
+                        <path d="M14 7L9 11" stroke="#1e293b" strokeWidth="1.5" />
+                        <path d="M14 22L9 18" stroke="#1e293b" strokeWidth="1.5" />
                     </svg>
                 </div>
-                <span style={styles.label}>Top Expense Category</span>
-                <h2 style={styles.value}>{topCategory}</h2>
             </div>
         </div>
     );
 }
 
 const styles = {
-    gridContainer: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px", margin: "24px 0" },
-    card: { background: "#ffffff", borderRadius: "24px", padding: "24px", display: "flex", flexDirection: "column", alignItems: "flex-start", boxShadow: "0 4px 20px rgba(0, 0, 0, 0.01)" },
-    iconWrapper: { width: "40px", height: "40px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" },
-    label: { fontSize: "12px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" },
-    value: { fontSize: "26px", fontWeight: "700", color: "#1e293b", margin: 0, letterSpacing: "-0.03em" },
+    grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "24px", marginTop: "24px", width: "100%" },
     tile: {
-        background: "var(--card)",
-        border: "1px solid var(--line)",
-        borderRadius: 20,
-        padding: "32px",
-
-        // CRITICAL: These two lines allow the mascot to absolute position and hide below the border line
+        background: "#ffffff",
+        border: "1px solid #f1f5f9",
+        borderRadius: "24px",
+        padding: "24px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.01)",
         position: "relative",
         overflow: "hidden",
     },
+    iconWrapper: { width: "40px", height: "40px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" },
+    icon: { fontSize: "16px" },
+    label: { fontSize: "12px", fontWeight: "600", color: "#94a3b8", margin: "0 0 6px 0", textTransform: "uppercase", letterSpacing: "0.05em" },
+    value: { fontSize: "24px", fontWeight: "700", color: "#1e293b", margin: 0, letterSpacing: "-0.02em", zIndex: 2 },
+    cornerMascotContainer: { position: "absolute", bottom: "-4px", right: "12px", pointerEvents: "none", zIndex: 1 },
+    sideMascotContainer: { position: "absolute", right: 0, bottom: "16px", pointerEvents: "none", zIndex: 1, transform: "translateX(100%)" }
 };

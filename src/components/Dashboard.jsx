@@ -36,7 +36,7 @@ export default function Dashboard({ onAddClick }) {
                         <h3 style={styles.cardTitle}>Transactions Ledger</h3>
                         <FilterBar
                             selectedCategory={selectedCategory}
-                            setSelectedCategory={setSelectedCategory}
+                            setSelectedCategory={setSelectedCategory} 
                         />
                     </div>
                     <div style={styles.scrollableContent}>
