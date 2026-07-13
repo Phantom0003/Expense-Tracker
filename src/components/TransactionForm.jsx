@@ -34,7 +34,7 @@ export default function TransactionForm({ onClose }) {
                         </select>
                     </div>
                     <div style={styles.inputGroup}>
-                        <label style={styles.label}>Amount ($)</label>
+                        <label style={styles.label}>Amount (Rs.)</label>
                         <input type="number" name="amount" placeholder="0.00" value={form.amount} onChange={handleChange} required style={styles.field} />
                     </div>
                     <div style={styles.inputGroup}>

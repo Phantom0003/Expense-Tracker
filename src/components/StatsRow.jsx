@@ -1,4 +1,5 @@
 import { useTransactions } from "../context/TransactionContext";
+import PeekingMascot from "./PeekingMascot";
 
 // Change this variable to your preferred currency type (e.g., "Rs.", "LKR", "$", "€")
 const CURRENCY = "Rs. ";
@@ -95,4 +96,14 @@ const styles = {
     iconWrapper: { width: "40px", height: "40px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" },
     label: { fontSize: "12px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" },
     value: { fontSize: "26px", fontWeight: "700", color: "#1e293b", margin: 0, letterSpacing: "-0.03em" },
+    tile: {
+        background: "var(--card)",
+        border: "1px solid var(--line)",
+        borderRadius: 20,
+        padding: "32px",
+
+        // CRITICAL: These two lines allow the mascot to absolute position and hide below the border line
+        position: "relative",
+        overflow: "hidden",
+    },
 };

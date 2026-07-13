@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useTransactions } from "../context/TransactionContext";
+import PeekingMascot from "./PeekingMascot";
 
 // Sophisticated, soft palette matching the design concept
 const COLORS = ["#4f46e5", "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#ec4899"];
@@ -143,5 +144,15 @@ const styles = {
         color: "#94a3b8",
         fontSize: "13px",
         fontWeight: "500",
+    },
+    tile: {
+        background: "var(--card)",
+        border: "1px solid var(--line)",
+        borderRadius: 20,
+        padding: "32px",
+
+        // CRITICAL: These two lines allow the mascot to absolute position and hide below the border line
+        position: "relative",
+        overflow: "hidden",
     },
 };
